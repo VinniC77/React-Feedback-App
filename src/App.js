@@ -3,7 +3,9 @@ import Header from "./components/Header";
 const App = () => {
     return (
         <>
-        <Header text={true} />
+        {/* the props passing here (bgcolor and textColor) could be used inside the component, putting it in the parameters */}
+        {/* bgColor='green' textColor='yellow'  */}
+        <Header /> 
         <div className="container">
             <h1>My App</h1>
         </div>
