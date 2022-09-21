@@ -1,13 +1,25 @@
-import { useState } from 'react'
 import Header from "./components/Header"
 import FeedbackList from "./components/FeedbackList"
 import FeedbackData from './data/FeedbackData'
 import FeedbackStats from './components/FeedbackStats'
 import FeedbackForm from './components/FeedbackForm'
 
+import { useState } from 'react'
+
+import { v4 as uuidv4 } from 'uuid'
+
 const App = () => {
     // Here we create a variable and a setVariable that will edit the variable
     const [feedback, setFeedback] = useState(FeedbackData);
+
+    const addFeedback = (newFeedback) => {
+// uuid é uma biblioteca para gerar ID's únicas para quando necessitarmos, depois de instalada a importada, basta executar, junto do código em que queremos uma ID.
+        newFeedback.id = uuidv4()
+
+// Depois do novo feedback ser criado e receber uma ID, precisamos "adicioná-los" aos outros feedbacks
+        setFeedback([newFeedback, ...feedback])
+// Assim, estamos setando o array de feedbacks, adicionando o novo feedback ao array + os feedbacks atuais.
+    }
 
     const deleteFeedback = (id) => {
     // Agora vamos usar o setFeeback, porque o que vem como argumento dessa função agora, irá substituir o que temos em feedback. A ideia é, então, fazer com que o setFeedback receba todas as mensagens de feedback menos a que foi deletada, ou seja, menos a que foi passada como argumento da função deleteFeedback
@@ -23,7 +35,7 @@ const App = () => {
         {/* bgColor='green' textColor='yellow'  */}
         <Header /> 
         <div className="container">
-            <FeedbackForm />
+            <FeedbackForm handleAdd={addFeedback} />
             <FeedbackStats feedback={feedback} />
             <FeedbackList feedback={feedback} handleDelete={deleteFeedback} />
         </div>
