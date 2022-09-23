@@ -5,6 +5,8 @@ import FeedbackStats from "./components/FeedbackStats";
 import FeedbackForm from "./components/FeedbackForm";
 import AboutPage from "./pages/AboutPage";
 import AboutIconLink from "./components/AboutIconLink";
+import Post from "./components/Post";
+import Navi from "./components/Navi";
 
 import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -55,6 +57,9 @@ const App = () => {
             {/* Precisamos adicionar o exact para o React saber que deve mostrar a página inicial somente quando for exatamente a home que for chamada, ou seja, somente quando a / for chamada */}
           </Route>
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/post/:id/:name" element={<Post />} />
+          <Route path="/navi" element={<Navi />} />
+    {/* Aqui podemos pegar a URL que o usuario irá digitar de acordo com o id, e mostrar o conteúdo dese endereço, lhe enviando de volta o componente Post */}
         </Routes>
 
         <AboutIconLink />
