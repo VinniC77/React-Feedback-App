@@ -1,14 +1,17 @@
-import { useState } from "react"
+import { useState, useContext } from "react"
 import Card from "./shared/Card"
 import Button from "./shared/Button"
 import RatingSelect from "./RatingSelect"
+import FeedbackContext from "../context/FeedbackContext"
 
-const FeedbackForm = ({ handleAdd }) => {
+const FeedbackForm = () => {
   // Na medida em que o usuário escreve seu review, queremos que a propriedade text seja atualizada e para isso, precisamos "setar" a mesma através do useState. setText vai ser responsável por atualizar o valor de text.
   const [text, setText] = useState("");
   const [btnDisabled, setBtnDisabled] = useState(true); // O botão estará desabilitado até a mensagem atingir ao menos 10 caracteres
   const [rating, setRating] = useState(10);
   const [message, setMessage] = useState("");
+
+  const { addFeedback } = useContext(FeedbackContext)
 
   const handleTextChange = (e) => {
     if(text === '') { // Se o texto for vazio
@@ -37,7 +40,7 @@ const FeedbackForm = ({ handleAdd }) => {
         rating // Aqui é o mesmo que dizer rating: rating
       }
 
-      handleAdd(newFeedback) // Aqui estamos enviado pro Add o novo feedback através da função recebida por props no componente FeedbackForm
+      addFeedback(newFeedback) // Aqui estamos enviado pro Add o novo feedback através da função recebida por props no componente FeedbackForm
 
       setText('') // Aqui, estamos simplesmente limpando o input depois de adicionar o novo feedback.
     }

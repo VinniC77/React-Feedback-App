@@ -3,7 +3,7 @@ import { useContext } from 'react'
 import FeedbackContext from '../context/FeedbackContext'
 import FeedbackItem from "./FeedbackItem"
 
-const FeedbackList = ({ handleDelete }) => {
+const FeedbackList = () => {
 // Podemos extrair o que quer que queiramos do nosso FeedbackContext (tudo que estiver no value desse componente) utilizando o useContext
     const { feedback } = useContext(FeedbackContext) // Assim, não precisamos mais passar o feedback como props
 
@@ -15,7 +15,7 @@ const FeedbackList = ({ handleDelete }) => {
     return (
         <div className="feedback-list">
             {feedback.map((item) => (
-                <FeedbackItem key={item.id} item={item} handleDelete={handleDelete} />
+                <FeedbackItem key={item.id} item={item} />
             ))}
         </div>
     )
