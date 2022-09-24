@@ -1,6 +1,10 @@
-import PropTypes from 'prop-types'
+import { useContext } from "react"
+import FeedbackContext from "../context/FeedbackContext"
 
-const FeedbackStats = ({ feedback }) => {
+const FeedbackStats = () => {
+// Não precisamos mais passar o feedback como props, pois estamos passando pelo Context
+  const { feedback } = useContext(FeedbackContext)
+
 
   // Vamos calcular a média de avaliações (soma de todas as avaliações, dividida pela quantidade de avaliações) com reduce. O método de array reduce retorna um único valor. Pode receber um acumulador (que iniciamos em zero) e o valor atual. Depos de obtermos essa soma através do reduce, dividimos pela quantidade de avaliações, ou seja, feedback.length
 
@@ -20,9 +24,5 @@ const FeedbackStats = ({ feedback }) => {
     </div>
   );
 };
-
-FeedbackStats.propTypes = {
-    feedback: PropTypes.array.isRequired
-}
 
 export default FeedbackStats;
