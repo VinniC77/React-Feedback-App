@@ -1,7 +1,14 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
+import FeedbackContext from "../context/FeedbackContext";
 
 const RatingSelect = ({ select }) => {
   const [selected, setSelected] = useState(10);
+
+  const { feedbackEdit } = useContext(FeedbackContext)
+
+  useEffect(() => {
+    setSelected(feedbackEdit.item.rating) // Assim vamos ser capazes de editar o rating também, pois, toda a lógica deste elemento está aqui em RatingSelect
+  }, [feedbackEdit])
 
   // Aqui vamos montar as notas para que o usuário classifique de 1 a 10 a experiência. Através de radio buttons
   const handleChange = (e) => {

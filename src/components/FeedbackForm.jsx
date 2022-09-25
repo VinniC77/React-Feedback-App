@@ -1,4 +1,4 @@
-import { useState, useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 import Card from "./shared/Card"
 import Button from "./shared/Button"
 import RatingSelect from "./RatingSelect"
@@ -11,7 +11,19 @@ const FeedbackForm = () => {
   const [rating, setRating] = useState(10);
   const [message, setMessage] = useState("");
 
-  const { addFeedback } = useContext(FeedbackContext)
+  const { addFeedback, feedbackEdit, updateFeedback } = useContext(FeedbackContext)
+
+    useEffect(() => {
+// Aqui escreveremos o que queremos que aconteça toda vez que o botão de editar feedback é clicado      
+      if(feedbackEdit.edit === true) { // Primeiro chacamos se há algo no edit
+        setText(feedbackEdit.item.text) // Setaremos o novo texto para aquele feedback
+        setRating(feedbackEdit.item.rating) // Setaremos a nova avaliação para aquele feedback
+        setBtnDisabled(false) // Setamos o botão para habilitado, para inserir o item editado
+      }
+
+    }, [feedbackEdit]) // Agora a função irá executar, toda vez que eu clicar para editar um feedback
+// O useEffect recebe 2 argumentos. O 1, uma função de callback e o segundo, o que dispara a função quando é alterado. Se deixarmos um array vazio no segundo argumento, a função de callback irá executar toda vez que houver um reload da página.
+
 
   const handleTextChange = (e) => {
     if(text === '') { // Se o texto for vazio
@@ -40,7 +52,13 @@ const FeedbackForm = () => {
         rating // Aqui é o mesmo que dizer rating: rating
       }
 
-      addFeedback(newFeedback) // Aqui estamos enviado pro Add o novo feedback através da função recebida por props no componente FeedbackForm
+// Aqui vamos construir uma condição para verificar se o novo item tiver o edit como true, ou seja, se é um item editado, não iremos adicionar outro feedback, iremos apenas atualizar o mesmo. 
+      if(feedbackEdit.edit === true) {
+         updateFeedback(feedbackEdit.item.id, newFeedback)
+        //  recebendo o mesmo id e "gerando" um novo feedback para aquele id
+      } else { // se não for um item editado, apenas adicionamos o novo feedback
+        addFeedback(newFeedback) // Aqui estamos enviado pro Add o novo feedback através da função recebida por props no componente FeedbackForm
+      }
 
       setText('') // Aqui, estamos simplesmente limpando o input depois de adicionar o novo feedback.
     }

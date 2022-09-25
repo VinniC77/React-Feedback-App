@@ -26,6 +26,12 @@ export const FeedbackProvider = ({ children }) => {
         }
     ])
 
+// Aqui estamos montando montando o botão de editar e queremos que o item aqui receba o que quer que seja o feedback que estamos editando. A principio, o "editar" será falso e se tornará verdadeiro quando o botão for clicado.
+    const [feedbackEdit, setFeedbackEdit] = useState({
+        item: {},
+        edit: false
+    })
+
     const addFeedback = (newFeedback) => {
         newFeedback.id = uuidv4()
         setFeedback([newFeedback, ...feedback])
@@ -39,10 +45,29 @@ export const FeedbackProvider = ({ children }) => {
         // O filter irá passar por toda a array (de feedbacks) e filtrará (só irá trazer de volta) os itens que forem diferentes da id que foi passada na função deleteFeedback. Porque na função passamos o id que queremos deletar. E tudo isso é jogado de volta para o setFeedback que será mostrado para o usuário.
       };
 
+      const updateFeedback = (id, updItem ) => { // receberemos qual é o id do item que estamos atualizando e o updItem será o novo item já atualizado.
+        
+// Aqui vamos querer retornar a nova array com o novo feedback atualizado. Pegaremos a atual array de feedback, chamaremos o map, chamaremos cada feedback de item e verificaremos se o id daquele item é igual ao id que está sendo passado (que queremos atualizar?), se sim, adicionaremos o mesmo no array através do spread operator, se não, apenas retornaremos o item  
+         setFeedback(feedback.map((item) => item.id === id ? {
+             ...item, ...updItem
+         } : item))
+      }
+
+// A função abaixo vai atualizar o feedback quando estivermos editando ele
+    const editFeedback = (item) => { // item para sabermos qual item esvamos editando
+        setFeedbackEdit({
+            item,
+            edit: true
+        })
+    }
+
     return <FeedbackContext.Provider value={{
         feedback, // que é o mesmo que passar feedback: feedback
+        feedbackEdit, // pedaço de estado que tem o edit e o boolean
         deleteFeedback,
-        addFeedback
+        addFeedback,
+        editFeedback, // função
+        updateFeedback
     }}>
 {/* E aqui passamos o feedback pelo value, porque é esse elemento que os outros componentes vão precisar acessar */}
         {children}
