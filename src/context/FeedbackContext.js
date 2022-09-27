@@ -1,36 +1,37 @@
 import { v4 as uuidv4 } from 'uuid'
-import { createContext, useState } from "react"
+import { createContext, useState, useEffect } from "react"
 
 // O Context fornece uma maneira de passar props entre os componentes sem a necessidade de ficar passando essas props manualmente.
 
 const FeedbackContext = createContext()
 
 export const FeedbackProvider = ({ children }) => {
+// Vamos construir um loading até que a API devolva os dados através do fetch para melhorar a UX
+    const [isLoading, setIsLoading] = useState(true)
+
 
 // Por enquanto, vamos passar esse item como padrão para entender como o Context funciona.
-    const [feedback, setFeedback] = useState([
-        {
-            id: 1,
-            text: "This is feedback item 1",
-            rating: 10
-        },
-        {
-            id: 2,
-            text: "This is feedback item 2",
-            rating: 10
-        },
-        {
-            id: 3,
-            text: "This is feedback item 3",
-            rating: 10
-        }
-    ])
+    const [feedback, setFeedback] = useState([])
 
 // Aqui estamos montando montando o botão de editar e queremos que o item aqui receba o que quer que seja o feedback que estamos editando. A principio, o "editar" será falso e se tornará verdadeiro quando o botão for clicado.
     const [feedbackEdit, setFeedbackEdit] = useState({
         item: {},
         edit: false
     })
+
+    useEffect(() => {
+        fetchFeedback() // Queremos usar a função quando a página carregar, por isso usamos a []
+    }, [])
+
+    // Fetch feedback - Aqui vamos construir uma função para buscar (FETCH) os dados de feedback
+    const fetchFeedback = async () => {
+        const response = await fetch('http://localhost:5000/feedback?_sort=id&_order=desc')
+    // Utilizamos o sort (ORDENAR) para ordenar pelo ID de forma decrescente
+        const data = await response.json()
+
+        setFeedback(data)
+        setIsLoading(false)
+    }
 
     const addFeedback = (newFeedback) => {
         newFeedback.id = uuidv4()
@@ -64,6 +65,7 @@ export const FeedbackProvider = ({ children }) => {
     return <FeedbackContext.Provider value={{
         feedback, // que é o mesmo que passar feedback: feedback
         feedbackEdit, // pedaço de estado que tem o edit e o boolean
+        isLoading,
         deleteFeedback,
         addFeedback,
         editFeedback, // função
