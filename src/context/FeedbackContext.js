@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid'
 import { createContext, useState, useEffect } from "react"
 
 // O Context fornece uma maneira de passar props entre os componentes sem a necessidade de ficar passando essas props manualmente.
@@ -25,7 +24,7 @@ export const FeedbackProvider = ({ children }) => {
 
     // Fetch feedback - Aqui vamos construir uma função para buscar (FETCH) os dados de feedback
     const fetchFeedback = async () => {
-        const response = await fetch('http://localhost:5000/feedback?_sort=id&_order=desc')
+        const response = await fetch('/feedback?_sort=id&_order=desc')
     // Utilizamos o sort (ORDENAR) para ordenar pelo ID de forma decrescente
         const data = await response.json()
 
@@ -33,9 +32,21 @@ export const FeedbackProvider = ({ children }) => {
         setIsLoading(false)
     }
 
-    const addFeedback = (newFeedback) => {
-        newFeedback.id = uuidv4()
-        setFeedback([newFeedback, ...feedback])
+    const addFeedback = async (newFeedback) => {
+// Aqui vamos fazer o request para o backend afim de adicionar os itens no banco de dados e não somente na tela.
+// Vamos adicionar os novos itens de verdade no sistema.
+        const response = await fetch('/feedback', { // Aqui apontamos a rota para o qual faremos o request que é o localhost:5000/feedback que foi colocado no proxy
+            method: 'POST', // método POST para adicionar
+            headers: {
+                'Content-Type': 'application/json' // Especificamos o tipo de conteúdo que vamos adicionar: JSON
+            },
+            body: JSON.stringify(newFeedback) // e para o body vamos mandar o novo feedback
+        })
+
+        const data = await response.json() // Transformamos o data em JSON
+
+        setFeedback([data, ...feedback]) // e setamos o array com o data que é o que veio do backend
+    // Agora podemos adicionar feedbacks ao banco de dados (não sumirão mais ao recarregar a página)
     }
     
 
